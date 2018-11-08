@@ -22,7 +22,7 @@ if __name__ == '__main__':
     install_pyqt()
 
     from PyQt5 import QtWidgets
-    from .mia_install_widget import MIAInstallWidget
+    from mia_install_widget import MIAInstallWidget
 
     app = QtWidgets.QApplication(sys.argv)
     mia_install_widget = MIAInstallWidget()
