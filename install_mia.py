@@ -14,7 +14,7 @@ def install_pyqt():
     """
     Installs PyQt5 if not already installed
     """
-    install_package('pyqt5')
+    install_package('PyQt5')
 
 
 if __name__ == '__main__':
