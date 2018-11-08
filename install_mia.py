@@ -198,7 +198,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         # Installing Populse_MIA's modules using pip
         # self.install_package('populse_mia')  # Not available yet
-        subprocess.call(['pip', 'install', '-i', 'https://test.pypi.org/simple/', 'populse-mia'])
+        subprocess.call(['pip3', 'install', '-i', 'https://test.pypi.org/simple/', 'populse-mia'])
 
     def ok_or_abort(self, button):
         role = self.msg.buttonRole(button)
