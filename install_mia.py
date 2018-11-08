@@ -183,10 +183,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
                 print('Error creating the "projects" folder: ', e)
 
         # Moving populse_mia folder to the specified location
-        self.copy_directory('populse_mia', os.path.join(mia_path))
+        self.copy_directory('populse_mia', os.path.join(mia_path, 'populse_mia'))
 
         # Moving MRIFileManager folder to the specified location
-        self.copy_directory('MRIFileManager', os.path.join(mia_path))
+        self.copy_directory('MRIFileManager', os.path.join(mia_path, 'MRIFileManager'))
 
         # Adding both mia, MRIFileManager and projects paths to Populse_MIA's config
         config_file = os.path.join(mia_path, 'properties', 'config.yml')
