@@ -1,4 +1,5 @@
 import os
+import sys
 import yaml
 import shutil
 import subprocess
@@ -230,8 +231,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             self.save_config(config_dic, config_file)
 
         # Installing Populse_MIA's modules using pip
-        # self.install_package('populse_mia')  # Not available yet
-        subprocess.call(['pip3', 'install', '-i', 'https://test.pypi.org/simple/', 'populse-mia'])
+        self.install_package('populse-mia')  # Not available yet
 
     def ok_or_abort(self, button):
         role = self.msg.buttonRole(button)
@@ -270,8 +270,6 @@ class MIAInstallWidget(QtWidgets.QWidget):
         try:
             importlib.import_module(package)
         except ImportError:
-            import pip
-            if hasattr(pip, 'main'):
-                pip.main(['install', package])
-            else:
-                pip._internal.main(['install', package])
+            # TODO: THIS HAS TO BE CHANGED WHEN POPULSE_MIA WILL BE DEPLOYED
+            subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'extra-index-url',
+                             'https://test.pypi.org/simple/', package])

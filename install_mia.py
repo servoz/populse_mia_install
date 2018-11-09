@@ -1,4 +1,5 @@
 import sys
+import subprocess
 
 
 def install_package(package):
@@ -6,8 +7,9 @@ def install_package(package):
     try:
         importlib.import_module(package)
     except ImportError:
-        import pip
-        pip.main(['install', package])
+        # TODO: THIS HAS TO BE CHANGED WHEN POPULSE_MIA WILL BE DEPLOYED
+        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'extra-index-url',
+                         'https://test.pypi.org/simple/', package])
 
 
 def install_pyqt():
