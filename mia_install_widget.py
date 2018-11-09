@@ -271,5 +271,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             importlib.import_module(package)
         except ImportError:
             import pip
-            pip.main(['install', package])
-
+            if hasattr(pip, 'main'):
+                pip.main(['install', package])
+            else:
+                pip._internal.main(['install', package])
