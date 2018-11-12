@@ -383,7 +383,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
     @staticmethod
     def upgrade_soma_capsul():
-        os.chmod('upgrade_soma_capsul.sh', 777)
+        os.chmod('upgrade_soma_capsul.sh', 0o777)
         subprocess.call('./upgrade_soma_capsul.sh', shell=True)
 
     @staticmethod
