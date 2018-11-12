@@ -361,8 +361,6 @@ class MIAInstallWidget(QtWidgets.QWidget):
         self.check_box_config.setChecked(True)
         QtWidgets.QApplication.processEvents()
 
-        self.last_layout()
-
         # Installing Populse_MIA's modules using pip
         self.install_package('populse-mia')  # Not available yet
 
