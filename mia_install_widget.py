@@ -169,16 +169,67 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         self.check_box_pkgs = QtWidgets.QCheckBox("Installing Python packages (may take a few minutes)")
 
-        v_box_global = QtWidgets.QVBoxLayout()
-        v_box_global.addLayout(h_box_top_label)
-        v_box_global.addWidget(self.status_label)
-        v_box_global.addWidget(self.check_box_mia)
-        v_box_global.addWidget(self.check_box_mri_conv)
-        v_box_global.addWidget(self.check_box_config)
-        v_box_global.addWidget(self.check_box_pkgs)
-        v_box_global.addStretch(1)
+        self.v_box_install_status = QtWidgets.QVBoxLayout()
+        self.v_box_install_status.addLayout(h_box_top_label)
+        self.v_box_install_status.addWidget(self.status_label)
+        self.v_box_install_status.addWidget(self.check_box_mia)
+        self.v_box_install_status.addWidget(self.check_box_mri_conv)
+        self.v_box_install_status.addWidget(self.check_box_config)
+        self.v_box_install_status.addWidget(self.check_box_pkgs)
+        self.v_box_install_status.addStretch(1)
 
-        self.setLayout(v_box_global)
+        self.setLayout(self.v_box_install_status)
+
+        QtWidgets.QApplication.processEvents()
+
+    def last_layout(self):
+        # Reparenting the layout to a temporary widget
+        QtWidgets.QWidget().setLayout(self.v_box_install_status)
+
+        # Setting a new layout
+        self.mia_installed_label = QtWidgets.QLabel("Populse_MIA has been correctly installed.")
+        self.mia_installed_label.setFont(self.top_label_font)
+
+        h_box_top_label = QtWidgets.QHBoxLayout()
+        h_box_top_label.addStretch(1)
+        h_box_top_label.addWidget(self.mia_installed_label)
+        h_box_top_label.addStretch(1)
+
+        mia_label_text = "- populse_mia path: {0}".format(self.mia_path)
+        projects_label_text = "- projects path: {0}".format(self.projects_save_path)
+        mri_conv_label_text = "- MRIFileManager path: {0}".format(self.mri_conv_path)
+        operating_mode_label_text = "Populse_MIA has been installed with {0} mode.".format(self.operating_mode)
+
+        mia_label = QtWidgets.QLabel(mia_label_text)
+        projects_label = QtWidgets.QLabel(projects_label_text)
+        mri_conv_label = QtWidgets.QLabel(mri_conv_label_text)
+        operating_mode_label = QtWidgets.QLabel(operating_mode_label_text)
+
+        mia_command_label_text = "To launch Populse_MIA, execute this command line: python3 -m populse_mia.main"
+        mia_command_label = QtWidgets.QLabel(mia_command_label_text)
+        mia_command_label.setFont(self.top_label_font)
+
+        button_quit = QtWidgets.QPushButton("Quit")
+        button_quit.clicked.connect(self.close)
+
+        h_box_button = QtWidgets.QHBoxLayout()
+        h_box_button.addStretch(1)
+        h_box_button.addWidget(button_quit)
+
+        v_box_last_layout = QtWidgets.QVBoxLayout()
+        v_box_last_layout.addLayout(h_box_top_label)
+        v_box_last_layout.addStretch(1)
+        v_box_last_layout.addWidget(mia_label)
+        v_box_last_layout.addWidget(projects_label)
+        v_box_last_layout.addWidget(mri_conv_label)
+        v_box_last_layout.addStretch(1)
+        v_box_last_layout.addWidget(operating_mode_label)
+        v_box_last_layout.addStretch(1)
+        v_box_last_layout.addWidget(mia_command_label)
+        v_box_last_layout.addStretch(1)
+        v_box_last_layout.addLayout(h_box_button)
+
+        self.setLayout(v_box_last_layout)
 
         QtWidgets.QApplication.processEvents()
 
@@ -189,8 +240,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
         # Checking which operating mode has been selected
         if self.clinical_mode_push_button.isChecked():
             use_clinical_mode = "yes"
+            self.operating_mode = "clinical"
         else:
             use_clinical_mode = "non"
+            self.operating_mode = "research"
 
         # Checking that the specified paths are correct
         mia_path = self.mia_path_choice.text()
@@ -267,6 +320,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
         if self.folder_exists_flag:
             return
 
+        self.mia_path = os.path.abspath(os.path.join(mia_path, 'populse_mia'))
+        self.projects_save_path = os.path.abspath(os.path.join(projects_path, 'projects'))
+        self.mri_conv_path = os.path.abspath(os.path.join(mia_path, 'MRIFileManager'))
+
         self.set_new_layout()
 
         # Creating a "projects" folder in the specified projects folder
@@ -304,12 +361,18 @@ class MIAInstallWidget(QtWidgets.QWidget):
         self.check_box_config.setChecked(True)
         QtWidgets.QApplication.processEvents()
 
+        self.last_layout()
+        return
+
         # Installing Populse_MIA's modules using pip
         self.install_package('populse-mia')  # Not available yet
 
         # Updating the checkbox
         self.check_box_pkgs.setChecked(True)
         QtWidgets.QApplication.processEvents()
+
+        # Displaying the result of the installation
+        self.last_layout()
 
     def ok_or_abort(self, button):
         role = self.msg.buttonRole(button)
