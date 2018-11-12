@@ -242,7 +242,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             use_clinical_mode = "yes"
             self.operating_mode = "clinical"
         else:
-            use_clinical_mode = "non"
+            use_clinical_mode = "no"
             self.operating_mode = "research"
 
         # Checking that the specified paths are correct
