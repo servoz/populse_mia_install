@@ -96,6 +96,22 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         self.groupbox.setLayout(v_box_paths)
 
+        # Clinical mode groupbox
+        self.clinical_mode_group_box = QtWidgets.QGroupBox('Operating mode:')
+
+        self.clinical_mode_push_button = QtWidgets.QRadioButton('Clinical mode')
+        self.research_mode_push_button = QtWidgets.QRadioButton('Research mode')
+
+        v_box_clinical_mode = QtWidgets.QVBoxLayout()
+        v_box_clinical_mode.addWidget(self.clinical_mode_push_button)
+        v_box_clinical_mode.addWidget(self.research_mode_push_button)
+
+        self.clinical_mode_group_box.setLayout(v_box_clinical_mode)
+
+        h_box_clinical_mode = QtWidgets.QHBoxLayout()
+        h_box_clinical_mode.addWidget(self.clinical_mode_group_box)
+        h_box_clinical_mode.addStretch(1)
+
         # Push buttons
         self.push_button_install = QtWidgets.QPushButton("Install")
         self.push_button_install.clicked.connect(self.install)
@@ -113,6 +129,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         self.global_layout.addLayout(h_box_top_label)
         self.global_layout.addLayout(h_box_middle_label)
         self.global_layout.addWidget(self.groupbox)
+        self.global_layout.addLayout(h_box_clinical_mode)
         self.global_layout.addLayout(h_box_buttons)
 
         self.setLayout(self.global_layout)
@@ -129,9 +146,51 @@ class MIAInstallWidget(QtWidgets.QWidget):
         if folder_name:
             self.projects_path_choice.setText(folder_name)
 
+    def set_new_layout(self):
+        # Reparenting the layout to a temporary widget
+        QtWidgets.QWidget().setLayout(self.global_layout)
+
+        # Setting a new layout
+        self.mia_installing_label = QtWidgets.QLabel("Populse_MIA is getting installed. Please wait.")
+        self.mia_installing_label.setFont(self.top_label_font)
+
+        h_box_top_label = QtWidgets.QHBoxLayout()
+        h_box_top_label.addStretch(1)
+        h_box_top_label.addWidget(self.mia_installing_label)
+        h_box_top_label.addStretch(1)
+
+        self.status_label = QtWidgets.QLabel("Status:")
+
+        self.check_box_mia = QtWidgets.QCheckBox("Copying populse_mia")
+
+        self.check_box_mri_conv = QtWidgets.QCheckBox("Copying MRIFileManager")
+
+        self.check_box_config = QtWidgets.QCheckBox("Writing config file")
+
+        self.check_box_pkgs = QtWidgets.QCheckBox("Installing Python packages (may take a few minutes)")
+
+        v_box_global = QtWidgets.QVBoxLayout()
+        v_box_global.addLayout(h_box_top_label)
+        v_box_global.addWidget(self.status_label)
+        v_box_global.addWidget(self.check_box_mia)
+        v_box_global.addWidget(self.check_box_mri_conv)
+        v_box_global.addWidget(self.check_box_config)
+        v_box_global.addWidget(self.check_box_pkgs)
+        v_box_global.addStretch(1)
+
+        self.setLayout(v_box_global)
+
+        QtWidgets.QApplication.processEvents()
+
     def install(self):
 
         self.folder_exists_flag = False
+
+        # Checking which operating mode has been selected
+        if self.clinical_mode_push_button.isChecked():
+            use_clinical_mode = "yes"
+        else:
+            use_clinical_mode = "non"
 
         # Checking that the specified paths are correct
         mia_path = self.mia_path_choice.text()
@@ -208,6 +267,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
         if self.folder_exists_flag:
             return
 
+        self.set_new_layout()
+
         # Creating a "projects" folder in the specified projects folder
         if not os.path.isdir(os.path.join(projects_path, 'projects')):
             try:
@@ -218,8 +279,16 @@ class MIAInstallWidget(QtWidgets.QWidget):
         # Moving populse_mia folder to the specified location
         self.copy_directory('populse_mia', os.path.join(mia_path, 'populse_mia'))
 
+        # Updating the checkbox
+        self.check_box_mia.setChecked(True)
+        QtWidgets.QApplication.processEvents()
+
         # Moving MRIFileManager folder to the specified location
         self.copy_directory('MRIFileManager', os.path.join(mia_path, 'MRIFileManager'))
+
+        # Updating the checkbox
+        self.check_box_mri_conv.setChecked(True)
+        QtWidgets.QApplication.processEvents()
 
         # Adding both mia, MRIFileManager and projects paths to Populse_MIA's config
         config_file = os.path.join(mia_path, 'properties', 'config.yml')
@@ -228,10 +297,19 @@ class MIAInstallWidget(QtWidgets.QWidget):
             config_dic["mia_path"] = os.path.join(mia_path, 'populse_mia')
             config_dic["projects_save_path"] = os.path.join(projects_path, 'projects')
             config_dic["mri_conv_path"] = os.path.join(mia_path, 'MRIFileManager', 'MRIFileManager.jar')
+            config_dic["clinical_mode"] = use_clinical_mode
             self.save_config(config_dic, config_file)
+
+        # Updating the checkbox
+        self.check_box_config.setChecked(True)
+        QtWidgets.QApplication.processEvents()
 
         # Installing Populse_MIA's modules using pip
         self.install_package('populse-mia')  # Not available yet
+
+        # Updating the checkbox
+        self.check_box_pkgs.setChecked(True)
+        QtWidgets.QApplication.processEvents()
 
     def ok_or_abort(self, button):
         role = self.msg.buttonRole(button)
