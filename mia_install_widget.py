@@ -348,7 +348,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         QtWidgets.QApplication.processEvents()
 
         # Adding both mia, MRIFileManager and projects paths to Populse_MIA's config
-        config_file = os.path.join(mia_path, 'properties', 'config.yml')
+        config_file = os.path.join(mia_path, 'populse_mia', 'properties', 'config.yml')
         if os.path.isfile(config_file):
             config_dic = self.load_config(config_file)
             config_dic["mia_path"] = os.path.join(mia_path, 'populse_mia')
