@@ -362,10 +362,12 @@ class MIAInstallWidget(QtWidgets.QWidget):
         QtWidgets.QApplication.processEvents()
 
         self.last_layout()
-        return
 
         # Installing Populse_MIA's modules using pip
         self.install_package('populse-mia')  # Not available yet
+
+        # Updating soma-base and capsul: need to be removed when soma-base and capsul last versisons will be on Pypi
+        self.upgrade_soma_capsul()
 
         # Updating the checkbox
         self.check_box_pkgs.setChecked(True)
@@ -380,6 +382,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
             self.folder_exists_flag = False
         else:
             self.folder_exists_flag = True
+
+    @staticmethod
+    def upgrade_soma_capsul():
+        subprocess.call('./upgrade_soma_capsul.sh', shell=True)
 
     @staticmethod
     def copy_directory(src, dest):
