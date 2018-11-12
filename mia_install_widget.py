@@ -417,5 +417,5 @@ class MIAInstallWidget(QtWidgets.QWidget):
             importlib.import_module(package)
         except ImportError:
             # TODO: THIS HAS TO BE CHANGED WHEN POPULSE_MIA WILL BE DEPLOYED
-            subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'extra-index-url',
+            subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', '--extra-index-url',
                              'https://test.pypi.org/simple/', package])
