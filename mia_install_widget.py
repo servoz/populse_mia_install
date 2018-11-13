@@ -36,7 +36,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         # Groupbox
         self.groupbox = QtWidgets.QGroupBox()
 
-        mia_path_default = ''  # to determine from the system (ex: for Windows: Program Files)
+        mia_path_default = os.path.join(os.path.expanduser('~'), '.populse_mia')
 
         self.mia_path_label = QtWidgets.QLabel("Populse_MIA installation path:")
         self.mia_path_choice = QtWidgets.QLineEdit(mia_path_default)
@@ -245,6 +245,13 @@ class MIAInstallWidget(QtWidgets.QWidget):
             use_clinical_mode = "no"
             self.operating_mode = "research"
 
+        # Creating the .populse_mia folder if it does not exists
+        home_path = os.path.expanduser('~')
+        dot_mia_path = os.path.join(home_path, '.populse_mia')
+
+        if not os.path.isdir(dot_mia_path):
+            os.mkdir(dot_mia_path)
+
         # Checking that the specified paths are correct
         mia_path = self.mia_path_choice.text()
         if not os.path.isdir(mia_path):
@@ -356,13 +363,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             config_dic["clinical_mode"] = use_clinical_mode
             self.save_config(config_dic, config_file)
 
-        # Adding mia path to /home/.mia/configuration.yml
-        home_path = os.path.expanduser('~')
-        dot_mia_path = os.path.join(home_path, '.mia')
-
-        if not os.path.isdir(dot_mia_path):
-            os.mkdir(dot_mia_path)
-
+        # Adding mia path to /home/.populse_mia/configuration.yml
         home_config = {'mia_path': os.path.join(mia_path, 'populse_mia')}
 
         self.save_config(home_config, os.path.join(dot_mia_path, 'configuration.yml'))
