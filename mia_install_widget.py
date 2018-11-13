@@ -205,7 +205,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         mri_conv_label = QtWidgets.QLabel(mri_conv_label_text)
         operating_mode_label = QtWidgets.QLabel(operating_mode_label_text)
 
-        mia_command_label_text = "To launch Populse_MIA, execute this command line: python3 -m populse_mia.main"
+        mia_command_label_text = "To launch Populse_MIA, execute this command line: python3 -m populse_mia"
         mia_command_label = QtWidgets.QLabel(mia_command_label_text)
         mia_command_label.setFont(self.top_label_font)
 
@@ -351,11 +351,21 @@ class MIAInstallWidget(QtWidgets.QWidget):
         config_file = os.path.join(mia_path, 'populse_mia', 'properties', 'config.yml')
         if os.path.isfile(config_file):
             config_dic = self.load_config(config_file)
-            config_dic["mia_path"] = os.path.join(mia_path, 'populse_mia')
             config_dic["projects_save_path"] = os.path.join(projects_path, 'projects')
             config_dic["mri_conv_path"] = os.path.join(mia_path, 'MRIFileManager', 'MRIFileManager.jar')
             config_dic["clinical_mode"] = use_clinical_mode
             self.save_config(config_dic, config_file)
+
+        # Adding mia path to /home/.mia/configuration.yml
+        home_path = os.path.expanduser('~')
+        dot_mia_path = os.path.join(home_path, '.mia')
+
+        if not os.path.isdir(dot_mia_path):
+            os.mkdir(dot_mia_path)
+
+        home_config = {'mia_path': os.path.join(mia_path, 'populse_mia')}
+
+        self.save_config(home_config, os.path.join(dot_mia_path, 'configuration.yml'))
 
         # Updating the checkbox
         self.check_box_config.setChecked(True)
@@ -364,7 +374,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         # Installing Populse_MIA's modules using pip
         self.install_package('populse-mia')  # Not available yet
 
-        # Updating soma-base and capsul: need to be removed when soma-base and capsul last versisons will be on Pypi
+        # Upgrading soma-base and capsul: need to be removed when soma-base and capsul last versions will be on PyPi
         self.upgrade_soma_capsul()
 
         # Updating the checkbox
