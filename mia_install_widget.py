@@ -352,7 +352,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         if os.path.isfile(config_file):
             config_dic = self.load_config(config_file)
             config_dic["projects_save_path"] = os.path.join(projects_path, 'projects')
-            config_dic["mri_conv_path"] = os.path.join(mia_path, 'MRIFileManager', 'MRIFileManager.jar')
+            config_dic["mri_conv_path"] = os.path.join(mia_path, 'MRIFileManager', 'MRIManager.jar')
             config_dic["clinical_mode"] = use_clinical_mode
             self.save_config(config_dic, config_file)
 
