@@ -20,6 +20,7 @@ def install_pyqt():
 if __name__ == '__main__':
 
     install_pyqt()
+    install_package('pyyaml')
 
     from PyQt5 import QtWidgets
     from mia_install_widget import MIAInstallWidget
