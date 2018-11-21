@@ -22,6 +22,14 @@ if __name__ == '__main__':
     install_pyqt()
     install_package('pyyaml')
 
+    try:
+        __import__('PyQt5')
+        __import__('yaml')
+    except ImportError:
+        print('\n\nPython package environment has not been correctly updated.\n\nPlease relaunch the following command:'
+              ' python3 install_mia.py')
+
+
     from PyQt5 import QtWidgets
     from mia_install_widget import MIAInstallWidget
 
