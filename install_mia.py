@@ -17,18 +17,39 @@ def install_pyqt():
     install_package('PyQt5')
 
 
+def install_yaml():
+    """
+    Installs pyyaml if not already installed.
+    This package is special because it is called "pyyaml" in the PyPi world but "yaml" in the Python world.
+    """
+    import importlib
+    try:
+        importlib.import_module('yaml')
+    except ImportError:
+        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'pyyaml'])
+
+
 if __name__ == '__main__':
 
     install_pyqt()
     install_package('pyyaml')
 
     try:
-        __import__('PyQt5')
-        __import__('yaml')
+        from PyQt5 import QtWidgets
+    except ImportError:  # giving a last chance to install PyQt5
+        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'PyQt5'])
+
+    try:
+        import yaml
+    except ImportError:  # giving a last chance to install pyyaml
+        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'pyyaml'])
+
+    try:
+        from PyQt5 import QtWidgets
+        import yaml
     except ImportError:
         print('\n\nPython package environment has not been correctly updated.\n\nPlease relaunch the following command:'
               ' python3 install_mia.py')
-
 
     from PyQt5 import QtWidgets
     from mia_install_widget import MIAInstallWidget
