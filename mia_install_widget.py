@@ -392,10 +392,14 @@ class MIAInstallWidget(QtWidgets.QWidget):
         else:
             self.folder_exists_flag = True
 
-    @staticmethod
-    def upgrade_soma_capsul():
-        os.chmod('upgrade_soma_capsul.sh', 0o777)
-        subprocess.call('./upgrade_soma_capsul.sh', shell=True)
+    def upgrade_soma_capsul(self):
+        self.uninstall_package('capsul')
+        os.chmod('upgrade_capsul.sh', 0o777)
+        subprocess.call('./upgrade_capsul.sh', shell=True)
+
+        self.uninstall_package('soma-base')
+        os.chmod('upgrade_soma.sh', 0o777)
+        subprocess.call('./upgrade_soma.sh', shell=True)
 
     @staticmethod
     def copy_directory(src, dest):
@@ -430,3 +434,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
             # TODO: THIS HAS TO BE CHANGED WHEN POPULSE_MIA WILL BE DEPLOYED
             subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', '--extra-index-url',
                              'https://test.pypi.org/simple/', package])
+
+    @staticmethod
+    def uninstall_package(package):
+        try:
+            subprocess.call([sys.executable, '-m', 'pip', 'uninstall', '--yes', package])
+        except:
+            subprocess.call(['pip3', 'uninstall', '--yes', package])
