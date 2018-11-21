@@ -32,17 +32,21 @@ def install_yaml():
 if __name__ == '__main__':
 
     install_pyqt()
-    install_package('pyyaml')
+    install_yaml()
+
+    try:
+        import yaml
+    except ImportError:  # giving a last chance to install pyyaml
+        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'pyyaml'])
 
     try:
         from PyQt5 import QtWidgets
     except ImportError:  # giving a last chance to install PyQt5
         subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'PyQt5'])
 
-    try:
-        import yaml
-    except ImportError:  # giving a last chance to install pyyaml
-        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'pyyaml'])
+    # Removing PyQt5 from the sys modules to avoid conflicts
+    if 'PyQt5' in sys.modules.keys():
+        del sys.modules['PyQt5']
 
     try:
         from PyQt5 import QtWidgets
