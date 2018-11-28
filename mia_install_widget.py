@@ -428,8 +428,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
     @staticmethod
     def copy_directory(src, dest):
+        file_directory = os.path.realpath(__file__)
+        src_path = os.path.join(file_directory, src)
         try:
-            shutil.copytree(src, dest)
+            shutil.copytree(src_path, dest)
         # Directories are the same
         except shutil.Error as e:
             print('Directory not copied. Error: %s' % e)
