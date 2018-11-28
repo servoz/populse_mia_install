@@ -393,12 +393,12 @@ class MIAInstallWidget(QtWidgets.QWidget):
         else:
             self.folder_exists_flag = True
 
-    @staticmethod
-    def upgrade_soma_capsul():
+    def upgrade_soma_capsul(self):
         temp_dir = tempfile.mkdtemp()
         cwd = os.getcwd()
         try:
             # Updating capsul
+            self.uninstall_package('capsul')
             subprocess.call(['git', 'clone', 'https://github.com/populse/capsul.git', os.path.join(temp_dir, 'capsul')])
             os.chdir(os.path.join(temp_dir, 'capsul'))
             subprocess.call([sys.executable, 'setup.py', 'install', '--user', '--force', '--prefix='])
@@ -407,6 +407,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         try:
             # Updating soma-base
+            self.uninstall_package('soma-base')
             subprocess.call(['git', 'clone', 'https://github.com/populse/soma-base.git', os.path.join(temp_dir, 'soma-base')])
             os.chdir(os.path.join(temp_dir, 'soma-base'))
             subprocess.call([sys.executable, 'setup.py', 'install', '--user', '--force', '--prefix='])
@@ -423,9 +424,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
                 subprocess.call('./upgrade_soma.sh', shell=True)'''
 
         os.chdir(cwd)
-        os.removedirs(temp_dir)
-
-
+        shutil.rmtree(temp_dir, ignore_errors=True)
 
     @staticmethod
     def copy_directory(src, dest):
