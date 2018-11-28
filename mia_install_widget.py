@@ -2,6 +2,7 @@ import os
 import sys
 import yaml
 import shutil
+import tempfile
 import subprocess
 from PyQt5 import QtWidgets, QtGui, QtCore
 
@@ -392,14 +393,39 @@ class MIAInstallWidget(QtWidgets.QWidget):
         else:
             self.folder_exists_flag = True
 
-    def upgrade_soma_capsul(self):
-        self.uninstall_package('capsul')
-        os.chmod('upgrade_capsul.sh', 0o777)
-        subprocess.call('./upgrade_capsul.sh', shell=True)
+    @staticmethod
+    def upgrade_soma_capsul():
+        temp_dir = tempfile.mkdtemp()
+        cwd = os.getcwd()
+        try:
+            # Updating capsul
+            subprocess.call(['git', 'clone', 'https://github.com/populse/capsul.git', os.path.join(temp_dir, 'capsul')])
+            os.chdir(os.path.join(temp_dir, 'capsul'))
+            subprocess.call([sys.executable, 'setup.py', 'install', '--user', '--force', '--prefix='])
+        except:
+            print('\n\nProblem while upgrading capsul...')
 
-        self.uninstall_package('soma-base')
-        os.chmod('upgrade_soma.sh', 0o777)
-        subprocess.call('./upgrade_soma.sh', shell=True)
+        try:
+            # Updating soma-base
+            subprocess.call(['git', 'clone', 'https://github.com/populse/soma-base.git', os.path.join(temp_dir, 'soma-base')])
+            os.chdir(os.path.join(temp_dir, 'soma-base'))
+            subprocess.call([sys.executable, 'setup.py', 'install', '--user', '--force', '--prefix='])
+        except:
+            print('\n\nProblem while upgrading soma-base...')
+
+            '''if not os.name == 'nt':  # if not on windows
+                self.uninstall_package('capsul')
+                os.chmod('upgrade_capsul.sh', 0o777)
+                subprocess.call('./upgrade_capsul.sh', shell=True)
+    
+                self.uninstall_package('soma-base')
+                os.chmod('upgrade_soma.sh', 0o777)
+                subprocess.call('./upgrade_soma.sh', shell=True)'''
+
+        os.chdir(cwd)
+        os.removedirs(temp_dir)
+
+
 
     @staticmethod
     def copy_directory(src, dest):
