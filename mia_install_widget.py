@@ -206,7 +206,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
         mri_conv_label = QtWidgets.QLabel(mri_conv_label_text)
         operating_mode_label = QtWidgets.QLabel(operating_mode_label_text)
 
-        mia_command_label_text = "To launch Populse_MIA, execute this command line: python3 -m populse_mia"
+        mia_command_label_text = "To launch Populse_MIA, execute one of these command lines depending on your Python " \
+                                 "setup:\n\npython3 -m populse_mia\n\npython -m populse_mia"
         mia_command_label = QtWidgets.QLabel(mia_command_label_text)
         mia_command_label.setFont(self.top_label_font)
 
