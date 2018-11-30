@@ -1,2 +1,3 @@
 # populse_mia_install
-Test to install populse_mia (user) 
+
+The repository dedicated to the populse_mia installation !
