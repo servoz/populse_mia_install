@@ -13,6 +13,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         super().__init__()
 
+        self.matlab_path = ""
+
         # Labels
         self.top_label_text = 'Welcome to Populse_MIA installation.'
         self.top_label = QtWidgets.QLabel(self.top_label_text)
@@ -254,6 +256,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             self.matlab_browse.setDisabled(True)
             self.matlab_standalone_browse.setDisabled(True)
         else:
+            self.install_matlab_api()
             self.use_matlab_checkbox.setChecked(True)
         self.spm_choice.setDisabled(True)
         self.spm_standalone_choice.setDisabled(True)
@@ -280,8 +283,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
                 return_value = os.path.join(valid_lines[0].decode('ascii'), 'bin', 'matlab')
 
                 if os.path.isfile(os.path.join(valid_lines[0].decode('ascii'), 'bin', 'matlab')):
+                    self.matlab_path = valid_lines[0].decode('ascii')
                     return_value = os.path.join(valid_lines[0].decode('ascii'), 'bin', 'matlab')
                 elif os.path.isfile(os.path.join(valid_lines[0].decode('ascii'), 'bin', 'matlab.exe')):
+                    self.matlab_path = valid_lines[0].decode('ascii')
                     return_value = os.path.join(valid_lines[0].decode('ascii'), 'bin', 'matlab.exe')
                 else:
                     return_value = ""
@@ -289,6 +294,18 @@ class MIAInstallWidget(QtWidgets.QWidget):
             pass
 
         return return_value
+
+    def install_matlab_api(self):
+        pass
+        # TODO: find a way to get the admin rights
+        """cur_dir = os.getcwd()
+        try:
+            if self.matlab_path:
+                os.chdir(os.path.join(self.matlab_path, 'extern', 'engines', 'python'))
+                subprocess.call([sys.executable, 'setup.py', 'install'])
+                os.chdir(cur_dir)
+        except:
+            os.chdir(cur_dir)"""
 
     def use_matlab_changed(self):
         """
@@ -728,8 +745,9 @@ class MIAInstallWidget(QtWidgets.QWidget):
             importlib.import_module(package)
         except ImportError:
             # TODO: THIS HAS TO BE CHANGED WHEN POPULSE_MIA WILL BE DEPLOYED
-            subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', '--extra-index-url',
-                             'https://test.pypi.org/simple/', package])
+            subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', package])
+            # subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', '--extra-index-url',
+            #                  'https://test.pypi.org/simple/', package])
 
     @staticmethod
     def uninstall_package(package):
