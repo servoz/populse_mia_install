@@ -28,7 +28,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         h_box_top_label.addWidget(self.top_label)
         h_box_top_label.addStretch(1)
 
-        self.middle_label_text = 'Please select an installation path and a folder to store your future projects and' \
+        self.middle_label_text = 'Please select an installation path and a folder to store your future projects and ' \
                                  'set the paths to run Matlab and SPM12.\n\n'
 
         self.middle_label = QtWidgets.QLabel(self.middle_label_text)
