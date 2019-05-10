@@ -660,7 +660,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         QtWidgets.QApplication.processEvents()
 
         # Installing Populse_MIA's modules using pip
-        self.install_package('populse-mia')  # Not available yet
+        self.install_package('populse-mia')
 
         # Upgrading soma-base and capsul: need to be removed when soma-base and capsul last versions will be on PyPi
         self.upgrade_soma_capsul()
