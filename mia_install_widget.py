@@ -496,33 +496,33 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         # Checking which operating mode has been selected
         if self.clinical_mode_push_button.isChecked():
-            use_clinical_mode = "yes"
+            use_clinical_mode = True
             self.operating_mode = "clinical"
         else:
-            use_clinical_mode = "no"
+            use_clinical_mode = False
             self.operating_mode = "research"
 
         if self.use_matlab_checkbox.isChecked():
-            use_matlab = "yes"
+            use_matlab = True
             matlab = self.matlab_choice.text()
             matlab_standalone = self.matlab_standalone_choice.text()
         else:
-            use_matlab = "no"
+            use_matlab = False
             matlab = ""
             matlab_standalone = ""
 
         if self.use_spm_checkbox.isChecked():
-            use_spm = "yes"
+            use_spm = True
             spm = self.spm_choice.text()
         else:
-            use_spm = "no"
+            use_spm = False
             spm = ""
 
         if self.use_spm_standalone_checkbox.isChecked():
-            use_spm_standalone = "yes"
+            use_spm_standalone = True
             spm_standalone = self.spm_standalone_choice.text()
         else:
-            use_spm_standalone = "no"
+            use_spm_standalone = False
             spm_standalone = ""
 
         # Creating the .populse_mia folder if it does not exists
