@@ -70,6 +70,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         projects_path_default = ''  # setting a default value for the projects?
 
+        
         self.projects_path_label = QtWidgets.QLabel("Populse_MIA projects path:")
         self.projects_path_choice = QtWidgets.QLineEdit(projects_path_default)
         self.projects_path_browse = QtWidgets.QPushButton("Browse")
@@ -372,27 +373,27 @@ class MIAInstallWidget(QtWidgets.QWidget):
             self.use_spm_standalone_checkbox.setChecked(False)
 
     def browse_matlab(self):
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Matlab executable file')[0]
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Choose Matlab executable file', os.path.expanduser('~'))[0]
         if fname:
             self.matlab_choice.setText(fname)
 
     def browse_matlab_standalone(self):
-        fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose MCR directory')
+        fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose MCR directory', os.path.expanduser('~'))
         if fname:
             self.matlab_standalone_choice.setText(fname)
 
     def browse_spm(self):
-        fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose SPM directory')
+        fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose SPM directory', os.path.expanduser('~'))
         if fname:
             self.spm_choice.setText(fname)
 
     def browse_spm_standalone(self):
-        fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose SPM standalone directory')
+        fname = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose SPM standalone directory', os.path.expanduser('~'))
         if fname:
             self.spm_standalone_choice.setText(fname)
 
     def browse_mia_path(self):
-        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select a folder where to install Populse_MIA')
+        folder_name = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select a folder where to install Populse_MIA', os.path.expanduser('~'))
         if folder_name:
             self.mia_path_choice.setText(folder_name)
 
