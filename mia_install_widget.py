@@ -651,7 +651,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             self.save_config(config_dic, config_file)
 
         # Adding mia path to /home/.populse_mia/configuration.yml
-        home_config = {'mia_path': os.path.join(mia_path, 'populse_mia')}
+        home_config = {'mia_user_path': os.path.join(mia_path, 'populse_mia')}
 
         self.save_config(home_config, os.path.join(dot_mia_path, 'configuration.yml'))
 
