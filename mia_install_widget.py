@@ -398,7 +398,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
     def browse_projects_path(self):
         folder_name = QtWidgets.QFileDialog.\
-            getExistingDirectory(self, "Select a folder where to store Populse_MIA's projects")
+            getExistingDirectory(self, "Select a folder where to store Populse_MIA's projects", os.path.expanduser('~'))
         if folder_name:
             self.projects_path_choice.setText(folder_name)
 
@@ -526,8 +526,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             spm_standalone = ""
 
         # Creating the .populse_mia folder if it does not exists
-        home_path = os.path.expanduser('~')
-        dot_mia_path = os.path.join(home_path, '.populse_mia')
+        dot_mia_path = os.path.join(os.path.expanduser('~'), '.populse_mia')
 
         if not os.path.isdir(dot_mia_path):
             os.mkdir(dot_mia_path)
