@@ -1,48 +1,87 @@
+# -*- coding: utf-8 -*- #
+"""The first module used during mia's installation.
+
+Basically, this module is dedicated to the initialisation of the basic
+parameters and the various checks necessary for a successful installation
+of mia.
+
+:Contains:
+    :Function:
+        - install_package
+#        - install_pyqt
+        - install_yaml
+
+"""
+
+###############################################################################
+# Populse_mia - Copyright (C) IRMaGe/CEA, 2018
+# Distributed under the terms of the CeCILL license, as published by
+# the CEA-CNRS-INRIA. Refer to the LICENSE file or to
+# http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+# for details.
+###############################################################################
+
 import sys
 import subprocess
 
 
 def install_package(package):
     import importlib
+
     try:
         importlib.import_module(package)
+
     except ImportError:
-        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', package])
+        subprocess.call([sys.executable,
+                         '-m', 'pip', 'install',
+                         '--user', package])
 
 
-def install_pyqt():
-    """
-    Installs PyQt5 if not already installed
-    """
-    install_package('PyQt5')
+#def install_pyqt():
+#    """
+#    Installs PyQt5 if not already installed
+#    """
+#    install_package('PyQt5')
 
 
 def install_yaml():
     """
     Installs pyyaml if not already installed.
-    This package is special because it is called "pyyaml" in the PyPi world but "yaml" in the Python world.
+
+    This package is special because it is called "pyyaml" in the PyPi world
+    but "yaml" in the Python world.
     """
     import importlib
+
     try:
         importlib.import_module('yaml')
+
     except ImportError:
-        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'pyyaml'])
+        subprocess.call([sys.executable,
+                         '-m', 'pip', 'install',
+                         '--user', 'pyyaml'])
 
 
 if __name__ == '__main__':
 
-    install_pyqt()
+    install_package('PyQt5')
     install_yaml()
 
     try:
         import yaml
+
     except ImportError:  # giving a last chance to install pyyaml
-        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'pyyaml'])
+        subprocess.call([sys.executable,
+                         '-m', 'pip', 'install',
+                         '--user', 'pyyaml'])
 
     try:
         from PyQt5 import QtWidgets
+
     except ImportError:  # giving a last chance to install PyQt5
-        subprocess.call([sys.executable, '-m', 'pip', 'install', '--user', 'PyQt5'])
+        subprocess.call([sys.executable,
+                         '-m', 'pip', 'install',
+                         '--user', 'PyQt5'])
 
     # Removing PyQt5 from the sys modules to avoid conflicts
     if 'PyQt5' in sys.modules.keys():
@@ -51,9 +90,11 @@ if __name__ == '__main__':
     try:
         from PyQt5 import QtWidgets
         import yaml
+
     except ImportError:
-        print('\n\nPython package environment has not been correctly updated.\n\nPlease relaunch the following command:'
-              ' python3 install_mia.py')
+        print('\n\nPython package environment has not been correctly updated.'
+              '\n\nPlease relaunch the following command: '
+              'python3 install_mia.py')
 
     from PyQt5 import QtWidgets
     from mia_install_widget import MIAInstallWidget
@@ -63,8 +104,10 @@ if __name__ == '__main__':
 
     # Setting the window to the middle of the screen
     frame_gm = mia_install_widget.frameGeometry()
-    screen = QtWidgets.QApplication.desktop().screenNumber(QtWidgets.QApplication.desktop().cursor().pos())
-    center_point = QtWidgets.QApplication.desktop().screenGeometry(screen).center()
+    screen = QtWidgets.QApplication.desktop().screenNumber(
+                                QtWidgets.QApplication.desktop().cursor().pos())
+    center_point = QtWidgets.QApplication.desktop(
+                                ).screenGeometry(screen).center()
     frame_gm.moveCenter(center_point)
     mia_install_widget.move(frame_gm.topLeft())
 
